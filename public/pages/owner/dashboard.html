@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Owner Dashboard - Gym Discovery</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <h1><a href="../../index.html">GYM DISCOVERY</a></h1>
+                <ul id="nav-links">
+                    <li><a href="#" onclick="api.logout()">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div
+            style="background: linear-gradient(90deg, #001122, #002233); padding: 40px; border-radius: 16px; margin-bottom: 40px; border: 1px solid #004455;">
+            <h2 style="margin-bottom: 5px;">Gym Manager</h2>
+            <p style="color:var(--text-muted);">Oversee your facilities and talent.</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>My Gyms</h3>
+                <p>Update gym details and photos.</p>
+                <button class="btn" style="margin-top:15px;" onclick="alert('Gym Manager Coming Soon')">Manage
+                    Gyms</button>
+            </div>
+
+            <div class="card">
+                <h3>Recruitment</h3>
+                <p>Post new jobs and find trainers.</p>
+                <button class="btn" style="margin-top:15px;" onclick="alert('Job Poster Coming Soon')">Post Job</button>
+            </div>
+
+            <div class="card">
+                <h3>Applications</h3>
+                <p>Review incoming trainer applications.</p>
+                <div style="margin-top:20px;">
+                    <div style="font-size:2rem; font-weight:bold; color:var(--accent-green);">0</div>
+                    <span style="font-size:0.8rem; color:var(--text-muted);">Pending Review</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../js/api.js"></script>
+    <script src="../../js/ui.js"></script>
+</body>
+
+</html>

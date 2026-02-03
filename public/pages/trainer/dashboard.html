@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Trainer Dashboard - Gym Discovery</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <h1><a href="../../index.html">GYM DISCOVERY</a></h1>
+                <ul id="nav-links">
+                    <li><a href="#" onclick="api.logout()">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div
+            style="background: linear-gradient(90deg, #111, #220033); padding: 40px; border-radius: 16px; margin-bottom: 40px; border: 1px solid #441155;">
+            <h2 style="margin-bottom: 5px;">Trainer Portal</h2>
+            <p style="color:var(--text-muted);">Manage your career and clients.</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>My Profile</h3>
+                <p>Update your bio, rates, and specializations.</p>
+                <a href="profile.html" class="btn" style="margin-top:15px;">Edit Profile</a>
+            </div>
+
+            <div class="card">
+                <h3>Job Board</h3>
+                <p>Find new opportunities at premium gyms.</p>
+                <a href="../public/search-jobs.html" class="btn btn-secondary" style="margin-top:15px;">Search Jobs</a>
+            </div>
+
+            <div class="card">
+                <h3>Applications</h3>
+                <p>Track status of your job applications.</p>
+                <button class="btn btn-secondary" style="margin-top:15px;" disabled>View Applications</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../js/api.js"></script>
+    <script src="../../js/ui.js"></script>
+    <script>
+        const user = api.getCurrentUser();
+        // Assuming search-jobs.html exists or will exist, otherwise link might 404. 
+        // Logic: Kept the link consistent with previous dashboard.
+    </script>
+</body>
+
+</html>

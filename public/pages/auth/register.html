@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up - Gym Discovery</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .auth-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <h1><a href="../../index.html">GYM DISCOVERY</a></h1>
+            </nav>
+        </div>
+    </header>
+
+    <div class="auth-container">
+        <form id="register-form" style="width: 100%; max-width: 500px;">
+            <h2 style="text-align:center; font-size:2rem; margin-bottom:10px;">Create Account</h2>
+            <p style="text-align:center; color:var(--text-muted); margin-bottom:30px;">Join the elite fitness community.
+            </p>
+
+            <div id="error-msg" class="error-msg" style="text-align:center;"></div>
+
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="name" required placeholder="John Doe">
+            </div>
+
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="email" required placeholder="name@example.com">
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" minlength="6" required placeholder="••••••••">
+            </div>
+
+            <div class="grid-fields" style="background:transparent; border:none; padding:0; gap:15px; margin-bottom:0;">
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="text" id="phone" required placeholder="+1 234 567 890">
+                </div>
+
+                <div class="form-group">
+                    <label>City</label>
+                    <input type="text" id="city" placeholder="New York">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>I am a...</label>
+                <select id="role">
+                    <option value="user">Gym Member</option>
+                    <option value="trainer">Personal Trainer</option>
+                    <option value="gymOwner">Gym Owner</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn" style="width:100%; margin-top:20px;">Get Started</button>
+            <p style="margin-top: 20px; text-align:center; color: var(--text-muted);">
+                Already have an account? <a href="login.html" style="color:var(--primary-neon);">Log In</a>
+            </p>
+        </form>
+    </div>
+
+    <script src="../../js/api.js"></script>
+    <script>
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.querySelector('button[type="submit"]');
+            const errorDiv = document.getElementById('error-msg');
+
+            btn.disabled = true;
+            btn.textContent = 'Creating Account...';
+            errorDiv.innerText = '';
+
+            const data = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                phone: document.getElementById('phone').value,
+                role: document.getElementById('role').value,
+                location: {
+                    city: document.getElementById('city').value
+                }
+            };
+
+            const res = await api.register(data);
+
+            if (res.success) {
+                // Auto-login or redirect
+                alert('Account created! Redirecting to login...');
+                window.location.href = 'login.html';
+            } else {
+                btn.disabled = false;
+                btn.textContent = 'Get Started';
+                errorDiv.innerText = res.message;
+            }
+        });
+    </script>
+</body>
+
+</html>

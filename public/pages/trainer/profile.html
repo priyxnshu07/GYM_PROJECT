@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile - One Gym</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <h1><a href="../../index.html">GYM DISCOVERY</a></h1>
+                <ul id="nav-links">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="#" onclick="api.logout()">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2 style="text-align:center;">Build Your Trainer Profile</h2>
+        <p style="text-align:center; color:var(--text-muted); margin-bottom:40px;">This is how clients will find you.
+        </p>
+
+        <form id="profile-form">
+            <div id="msg-box"></div>
+
+            <div class="grid-fields">
+                <div class="form-group">
+                    <label>Hourly Rate ($)</label>
+                    <input type="number" id="hourlyRate" placeholder="e.g. 80" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Years of Experience</label>
+                    <input type="number" id="experienceYears" placeholder="e.g. 5" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Specializations (Comma separated)</label>
+                <input type="text" id="specializations" placeholder="Weight Loss, HIIT, Yoga, Rehab" required>
+                <small style="color:var(--text-muted);">e.g. "Yoga, Boxing"</small>
+            </div>
+
+            <div class="form-group">
+                <label>Certifications (Comma separated)</label>
+                <input type="text" id="certifications" placeholder="ACE, NASM, ISSA">
+            </div>
+
+            <div class="form-group">
+                <label>Bio</label>
+                <textarea id="bio" rows="5" placeholder="Tell clients about your philosophy and style..."
+                    style="width:100%; background:rgba(0,0,0,0.3); color:white; border:1px solid #333; padding:10px; border-radius:8px;"></textarea>
+            </div>
+
+            <button type="submit" class="btn" style="width:100%;">Save Profile</button>
+        </form>
+    </div>
+
+    <script src="../../js/api.js"></script>
+    <script src="../../js/ui.js"></script>
+    <script>
+        const form = document.getElementById('profile-form');
+        const box = document.getElementById('msg-box');
+        const currentUser = api.getCurrentUser();
+
+        // 1. Check if profile exists and pre-fill
+        (async () => {
+            // In a real app we'd have a specific "get my profile" endpoint or reuse getTrainer with ID
+            // Current backend: getTrainerProfile takes :trainerId URI param.
+            // We need to fetch by userId or store trainerId in session. 
+            // api.js setSession stores data.userId. 
+            // We don't have trainerId in session immediately if we just logged in without a profile.
+            // BUT, we can try to fetch via a "search" for my userID if the backend supported it, OR
+            // Just try to create. 
+            // Actually, `trainerController.js` `updateProfile` uses `userId` from header. 
+            // `createProfile` also uses `userId`.
+            // So we don't strictly need to fetch to Update if we use the update endpoint which does findOneAndUpdate({userId}).
+            // BUT we want to pre-fill. 
+            // We'd need to fetch the profile. 
+            // The backend `getTrainerProfile` expects `_id` of the Trainer document, NOT user ID.
+            // Gap: No endpoint to "Get My Trainer Profile" easily if I don't know my Trainer ID.
+            // Workaround: We will just allow "Create/Update" blind, OR we can fetch "Search" filtered by... wait, search is aggressive.
+            // Let's rely on the user filling it out for now.
+
+            // Wait, I can try to access `api/trainers/`? No.
+            // I'll leave pre-fill out for "MVP" MVP unless I want to create a `getMyProfile` endpoint.
+            // Actually, `updateProfile` returns the updated document.
+            // Let's just focus on Creation for the flow "Register -> Create Profile -> Searchable".
+        })();
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            const payload = {
+                hourlyRate: document.getElementById('hourlyRate').value,
+                experienceYears: document.getElementById('experienceYears').value,
+                specializations: document.getElementById('specializations').value.split(',').map(s => s.trim()),
+                certifications: document.getElementById('certifications').value.split(',').map(s => s.trim()),
+                bio: document.getElementById('bio').value
+            };
+
+            // Try Create first, if 409 (Conflict), try Update? 
+            // Or just try create.
+            let res = await api.request('/trainers/profile', 'POST', payload);
+
+            if (!res.success && res.status === 409) {
+                // Profile exists, try update
+                res = await api.request('/trainers/profile', 'PUT', payload);
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Save Profile';
+
+            if (res.success) {
+                box.innerHTML = '<div class="success-state" style="color:#00ff9d; margin-bottom:20px; text-align:center;">Profile Saved Successfully!</div>';
+                setTimeout(() => window.location.href = 'dashboard.html', 1500);
+            } else {
+                box.innerHTML = `<div class="error-msg" style="text-align:center; margin-bottom:20px;">${res.message}</div>`;
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Discovery</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <h1><a href="index.html">GYM DISCOVERY</a></h1>
+                <ul id="nav-links">
+                    <li><a href="pages/auth/login.html">Login</a></li>
+                    <li><a href="pages/auth/register.html">Sign Up</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h2>Elevate Your Fitness<br><span
+                    style="color:var(--primary-neon); -webkit-text-fill-color: var(--primary-neon);">To The Next
+                    Level</span></h2>
+            <p>Access the world's best gyms and elite trainers with one membership. Start your transformation today.</p>
+            <div class="actions">
+                <a href="pages/public/search-gyms.html" class="btn">Explore Gyms</a>
+                <a href="pages/public/search-trainers.html" class="btn btn-secondary">Find a Trainer</a>
+            </div>
+        </section>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3>Featured Studios</h3>
+            <a href="pages/public/search-gyms.html" style="color:var(--primary-neon); text-decoration:none;">View All
+                &rarr;</a>
+        </div>
+
+        <div id="featured-gyms" class="card-grid">
+            <!-- Loaded by JS -->
+        </div>
+
+        <div
+            style="margin-top: 80px; text-align: center; color: var(--text-muted); opacity: 0.5; padding-bottom: 20px;">
+            <p>&copy; 2026 Gym Discovery Platform. Built for excellence.</p>
+        </div>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script>
+        async function loadFeatured() {
+            UI.showLoading('featured-gyms');
+            const res = await api.searchGyms({ limit: 4 });
+
+            if (res.success && res.data.gyms.length > 0) {
+                const gyms = res.data.gyms;
+                document.getElementById('featured-gyms').innerHTML = gyms.map(gym => `
+                    <div class="card">
+                        <h3 style="color:#fff;">${gym.name}</h3>
+                        <p style="color:var(--primary-neon); margin-bottom:15px;">📍 ${gym.address.city}</p>
+                        <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin-bottom:15px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                             <span style="color:var(--text-muted);">Rating: ${gym.rating || 'New'}</span>
+                             <span style="color:var(--accent-green); font-weight:600;">$${gym.pricing ? gym.pricing.monthlyMembership : 'N/A'}/mo</span>
+                        </div>
+                    </div>
+                 `).join('');
+            } else {
+                UI.showEmpty('featured-gyms', 'No active gyms needed for the demo.');
+            }
+        }
+        loadFeatured();
+    </script>
+</body>
+
+</html>

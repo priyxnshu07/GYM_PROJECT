@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Gym Discovery</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        /* Auth Specific Overrides */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .auth-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-bottom: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <h1><a href="../../index.html">GYM DISCOVERY</a></h1>
+            </nav>
+        </div>
+    </header>
+
+    <div class="auth-container">
+        <form id="login-form">
+            <h2 style="text-align:center; margin-bottom:20px; font-size:2rem;">Welcome Back</h2>
+            <div id="error-box"></div>
+
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="email" required placeholder="name@example.com">
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" required placeholder="••••••••">
+            </div>
+
+            <button type="submit" class="btn" style="width:100%; margin-top:10px;" id="login-btn">Log In</button>
+            <p style="margin-top: 20px; text-align:center; color: var(--text-muted);">
+                Don't have an account? <a href="register.html" style="color:var(--primary-neon);">Sign Up</a>
+            </p>
+        </form>
+    </div>
+
+    <script src="../../js/api.js"></script>
+    <script>
+        const form = document.getElementById('login-form');
+        const btn = document.getElementById('login-btn');
+        const errorBox = document.getElementById('error-box');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorBox.innerHTML = '';
+            btn.disabled = true;
+            btn.textContent = 'Verifying...';
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const res = await api.login(email, password);
+
+            if (res.success) {
+                // Redirect
+                const role = res.data.role;
+                if (role === 'user') window.location.href = '../user/dashboard.html';
+                else if (role === 'trainer') window.location.href = '../trainer/dashboard.html';
+                else if (role === 'gymOwner') window.location.href = '../owner/dashboard.html';
+                else window.location.href = '../../index.html';
+            } else {
+                btn.disabled = false;
+                btn.textContent = 'Log In';
+                errorBox.innerHTML = `<div class="error-msg" style="text-align:center; margin-bottom:15px;">${res.message}</div>`;
+            }
+        });
+    </script>
+</body>
+
+</html>

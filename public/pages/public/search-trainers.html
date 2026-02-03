@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Search Trainers - Gym Discovery</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <h1><a href="../../index.html">GYM DISCOVERY</a></h1>
+                <ul id="nav-links"></ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2 style="text-align:center;">Elite Personal Trainers</h2>
+        <p style="text-align:center; color:var(--text-muted); margin-bottom:40px;">Expert guidance for your specific
+            goals.</p>
+
+        <form id="search-form" class="search-form">
+            <div class="grid-fields">
+                <div class="form-group">
+                    <label>Search by Goal</label>
+                    <input type="text" id="specialization" placeholder="e.g. Yoga, Hypertrophy">
+                </div>
+                <div class="form-group">
+                    <label>Max Budget ($/hr)</label>
+                    <input type="number" id="maxRate" placeholder="e.g. 100">
+                </div>
+                <div class="form-group">
+                    <label>Experience Level</label>
+                    <select id="minRating">
+                        <option value="">Any</option>
+                        <option value="4.5">Top Rated (4.5+)</option>
+                        <option value="4.0">Highly Rated (4.0+)</option>
+                    </select>
+                </div>
+            </div>
+            <div style="text-align:center;">
+                <button type="submit" class="btn" id="search-btn" style="min-width: 200px;">Find Expert</button>
+            </div>
+        </form>
+
+        <div id="results" class="card-grid"></div>
+    </div>
+
+    <script src="../../js/api.js"></script>
+    <script src="../../js/ui.js"></script>
+    <script>
+        const form = document.getElementById('search-form');
+        const results = document.getElementById('results');
+
+        fetchTrainers({});
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const filters = {
+                specialization: document.getElementById('specialization').value,
+                maxRate: document.getElementById('maxRate').value,
+                minRating: document.getElementById('minRating').value
+            };
+            fetchTrainers(filters);
+        });
+
+        async function fetchTrainers(filters) {
+            UI.showLoading('results');
+            const btn = document.getElementById('search-btn');
+            btn.disabled = true;
+
+            const res = await api.searchTrainers(filters);
+
+            btn.disabled = false;
+
+            if (res.success) {
+                if (res.data.trainers.length === 0) {
+                    UI.showEmpty('results', 'No trainers match your criteria.');
+                    return;
+                }
+                renderTrainers(res.data.trainers);
+            } else {
+                UI.showError('results', res.message);
+            }
+        }
+
+        function renderTrainers(trainers) {
+            results.innerHTML = trainers.map(t => {
+                const specsHtml = t.specializations && t.specializations.length
+                    ? t.specializations.slice(0, 3).map(s => `<span class="tag tag-green">${formatText(s)}</span>`).join('')
+                    : '<span class="tag" style="background:transparent; border:1px solid #444; color:#888;">No Specs</span>';
+
+                const initials = t.name ? t.name.substring(0, 2).toUpperCase() : 'PT';
+
+                return `
+                    <div class="card">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:15px;">
+                            <div style="display:flex; align-items:center; gap:15px;">
+                                <div style="width:50px; height:50px; background:linear-gradient(135deg, var(--secondary-neon), #444); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; color:white; border:2px solid var(--glass-border);">
+                                    ${initials}
+                                </div>
+                                <div>
+                                    <h3 style="margin:0; font-size:1.2rem;">${t.name}</h3>
+                                    <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">${t.experienceYears || '0'}+ Years Exp</p>
+                                </div>
+                            </div>
+                            <div style="text-align:right;">
+                                <span style="display:block; font-size:1.2rem; font-weight:bold; color:var(--primary-neon);">$${t.hourlyRate}</span>
+                                <span style="font-size:0.75rem; color:var(--text-muted);">per hour</span>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            ${specsHtml}
+                        </div>
+                        
+                        <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.5; margin-bottom:20px; min-height:60px;">
+                            ${t.bio ? t.bio.substring(0, 100) + (t.bio.length > 100 ? '...' : '') : 'Ready to help you achieve your fitness goals.'}
+                        </p>
+                        
+                        <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin-bottom:15px;">
+                        
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                             <div style="display:flex; align-items:center; gap:5px;">
+                                 <span style="color:gold;">★ ${t.rating ? t.rating : 'New'}</span>
+                             </div>
+                             <button class="btn btn-secondary" style="padding:8px 16px; font-size:0.85rem;" onclick="alert('Booking Coming Soon')">Book Now</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function formatText(str) {
+            return str.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+    </script>
+</body>
+
+</html>

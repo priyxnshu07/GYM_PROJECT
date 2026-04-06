@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../../css/style.css">
 </head>
 
-<body>
+<body style="background-image: url('../../images/image%20copy.png');">
     <header>
         <div class="container">
             <nav>
@@ -26,7 +26,7 @@
             <div class="grid-fields">
                 <div class="form-group">
                     <label>City Location</label>
-                    <input type="text" id="city" placeholder="e.g. New York">
+                    <input type="text" id="city-input" placeholder="e.g. New York">
                 </div>
                 <div class="form-group">
                     <label>State</label>
@@ -42,11 +42,11 @@
                 </div>
             </div>
             <div style="text-align:center;">
-                <button type="submit" class="btn" id="search-btn" style="min-width: 200px;">Search Gyms</button>
+                <button type="submit" class="btn" id="search-button" style="min-width: 200px;">Search Gyms</button>
             </div>
         </form>
 
-        <div id="results" class="card-grid">
+        <div id="gym-results" class="card-grid">
             <!-- Results injected here -->
         </div>
     </div>
@@ -55,7 +55,7 @@
     <script src="../../js/ui.js"></script>
     <script>
         const form = document.getElementById('search-form');
-        const results = document.getElementById('results');
+        const results = document.getElementById('gym-results');
 
         // Initial Load
         fetchgyms({});
@@ -63,7 +63,7 @@
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             const filters = {
-                city: document.getElementById('city').value,
+                city: document.getElementById('city-input').value,
                 state: document.getElementById('state').value,
                 minRating: document.getElementById('minRating').value
             };
@@ -71,8 +71,8 @@
         });
 
         async function fetchgyms(filters) {
-            UI.showLoading('results');
-            const btn = document.getElementById('search-btn');
+            UI.showLoading('gym-results');
+            const btn = document.getElementById('search-button');
             btn.disabled = true;
             btn.textContent = 'Searching...';
 
@@ -83,12 +83,12 @@
 
             if (res.success) {
                 if (res.data.gyms.length === 0) {
-                    UI.showEmpty('results', 'No gyms found. Try broader filters.');
+                    UI.showEmpty('gym-results', 'No gyms found. Try broader filters.');
                     return;
                 }
                 renderGyms(res.data.gyms);
             } else {
-                UI.showError('results', res.message);
+                UI.showError('gym-results', res.message);
             }
         }
 
@@ -99,22 +99,23 @@
                     : '';
 
                 const extraCount = gym.facilities && gym.facilities.length > 3
-                    ? `<span class="tag" style="background:transparent; border:1px solid #444; color:#888;">+${gym.facilities.length - 3}</span>`
+                    ? `<span class="tag" style="background:transparent; border:1px solid var(--border-subtle); color:var(--text-muted);">+${gym.facilities.length - 3}</span>`
                     : '';
 
                 return `
-                    <div class="card">
-                        <h3>${gym.name || 'Unnamed Gym'}</h3>
-                        <p style="color:var(--primary-neon);">📍 ${gym.address.city}, ${gym.address.state}</p>
+                        <div class="card">
+                        <h3 style="text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">${gym.name || 'Unnamed Gym'}</h3>
+                        <p style="color:var(--primary-neon-green); font-weight:600; font-size:0.9rem;">📍 ${gym.address.city}, ${gym.address.state}</p>
                         <div style="margin: 15px 0;">
                             ${facilitiesHtml} ${extraCount}
                         </div>
-                        <p style="font-size: 0.9rem; color: #fff; opacity:0.7;">
+                        <p style="font-size: 0.9rem; color: var(--text-muted); line-height:1.5;">
                             ${gym.description ? gym.description.substring(0, 80) + '...' : 'Premium facility waiting for you.'}
                         </p>
-                        <div style="margin-top:20px; display:flex; justify-content:space-between; align-items:center;">
-                             <span style="color:gold;">★ ${gym.rating ? gym.rating : 'New'}</span>
-                             ${gym.pricing ? `<span style="color:var(--accent-green); font-weight:bold;">$${gym.pricing.monthlyMembership}/mo</span>` : ''}
+                        <hr style="border:0; border-top:1px solid var(--border-subtle); margin:15px 0;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                             <span style="color:#fff; font-weight:600; font-size:0.9rem;">★ ${gym.rating ? gym.rating : 'New'}</span>
+                             ${gym.pricing ? `<span style="color:#fff; font-weight:bold;">$${gym.pricing.monthlyMembership}/mo</span>` : ''}
                         </div>
                     </div>
                 `;

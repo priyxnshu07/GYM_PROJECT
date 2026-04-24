@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Membership Management - Gym Discovery</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <h1><a href="../../index.html">GYM DISCOVERY</a></h1>
+                <div class="nav-links">
+                    <a href="../../index.html">Home</a>
+                    <a href="ai-workout.html">AI Workout</a>
+                    <a href="bookings.html">Bookings</a>
+                    <a href="#" class="active">Membership</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div style="max-width: 600px; margin: 40px auto;">
+            <h2>Membership Status</h2>
+            <div class="card" style="margin-top:20px; padding:30px; text-align:center;">
+                <div id="status-badge" style="background:var(--primary-neon-green); color:black; display:inline-block; padding:5px 15px; border-radius:20px; font-weight:bold; margin-bottom:15px;">ACTIVE</div>
+                <h3 id="member-type" style="font-size:1.8rem;">Elite Platinum Member</h3>
+                <p style="color:var(--text-muted);">Valid until: <span id="expiry-date" style="color:var(--text-light);">December 31, 2026</span></p>
+                
+                <hr style="margin:20px 0; border:0; border-top:1px solid #333;">
+                
+                <div style="display:flex; justify-content: space-around; margin-bottom:20px;">
+                    <div>
+                        <p style="font-size:0.8rem; color:var(--text-muted);">Remaining Days</p>
+                        <p style="font-size:1.5rem; font-weight:bold;">256</p>
+                    </div>
+                    <div>
+                        <p style="font-size:0.8rem; color:var(--text-muted);">Loyalty Points</p>
+                        <p style="font-size:1.5rem; font-weight:bold; color:var(--primary-neon-green);">1,250</p>
+                    </div>
+                </div>
+
+                <button class="btn" style="width:100%;" onclick="alert('Redirecting to secure payment gateway...')">Renew Membership</button>
+            </div>
+
+            <h3 style="margin-top:40px;">Upgrade Options</h3>
+            <div class="grid" style="grid-template-columns: 1fr 1fr; gap:20px; margin-top:20px;">
+                <div class="card">
+                    <h4>Monthly Pro</h4>
+                    <p style="font-size:1.5rem; margin:10px 0;">₹2,499/mo</p>
+                    <ul style="font-size:0.8rem; color:var(--text-muted); padding-left:20px;">
+                        <li>All Gym Access</li>
+                        <li>1 PT Session/mo</li>
+                    </ul>
+                    <button class="btn btn-outline" style="width:100%; margin-top:15px;">Select</button>
+                </div>
+                <div class="card" style="border: 1px solid var(--primary-neon-green);">
+                    <h4>Annual Elite</h4>
+                    <p style="font-size:1.5rem; margin:10px 0;">₹24,999/yr</p>
+                    <ul style="font-size:0.8rem; color:var(--text-muted); padding-left:20px;">
+                        <li>Unlimited Access</li>
+                        <li>Free Group Classes</li>
+                        <li>Priority Booking</li>
+                    </ul>
+                    <button class="btn" style="width:100%; margin-top:15px;">Active</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

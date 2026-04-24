@@ -245,6 +245,27 @@ h3 {
     padding: 40px 20px;
 }
 
+.hero-two-col {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.hero-two-col .hero-content {
+    flex: 1;
+    min-width: 300px;
+}
+
+.hero-two-col .actions {
+    justify-content: flex-start;
+}
+
+.hero-two-col h2 {
+    margin-bottom: 20px;
+}
+
 .hero h2 {
     font-size: 5rem;
     line-height: 1.1;
@@ -440,4 +461,60 @@ form {
 
 .card-grid .card:nth-child(3) {
     animation-delay: 0.3s;
+}
+
+/* Global Transition Enhancement */
+.card, .btn, a, input, select {
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Bodybuilder Bicep Curl SVG Animations */
+@keyframes bicepCurlLeft {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(-140deg); }
+}
+
+@keyframes bicepCurlRight {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(140deg); }
+}
+
+.curl-left {
+    animation: bicepCurlLeft 2.5s ease-in-out infinite;
+    transform-origin: 75px 170px;
+}
+
+.curl-right {
+    animation: bicepCurlRight 2.5s ease-in-out infinite;
+    transform-origin: 225px 170px;
+}
+
+/* Bodybuilder Deadlift SVG Animations */
+@keyframes deadliftLift {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-40px); }
+}
+
+.deadlift-lifter {
+    animation: deadliftLift 2.5s ease-in-out infinite;
+}
+
+/* Bodybuilder Pull-Up SVG Animations */
+@keyframes pullupTorso {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-45px); }
+}
+
+@keyframes pullupArms {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.4); }
+}
+
+.pullup-torso {
+    animation: pullupTorso 2s ease-in-out infinite;
+}
+
+.pullup-arms {
+    animation: pullupArms 2s ease-in-out infinite;
+    transform-origin: center 60px;
 }

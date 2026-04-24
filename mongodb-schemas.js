@@ -114,18 +114,17 @@ const trainerSchema = new Schema({
       'zumba',
       'aerobics',
       'martial_arts',
+      'boxing',
+      'kickboxing',
+      'mma',
       'sports_specific',
       'rehabilitation',
       'senior_fitness',
-      'nutrition'
+      'nutrition',
+      'other'
     ]
   }],
-  certifications: [{
-    name: String,
-    issuedBy: String,
-    issuedDate: Date,
-    expiryDate: Date
-  }],
+  certifications: [Schema.Types.Mixed],
   
   // Experience & Rates
   experienceYears: {
@@ -243,7 +242,11 @@ const gymSchema = new Schema({
     required: true
   },
   email: String,
-  website: String,
+  website: {
+    type: String,
+    trim: true,
+    default: ""
+  },
   
   // Facilities
   facilities: [{
@@ -335,6 +338,7 @@ gymSchema.index({ 'address.city': 1, 'address.state': 1 });
 gymSchema.index({ name: 'text', description: 'text' });
 gymSchema.index({ facilities: 1 });
 gymSchema.index({ rating: -1 });
+gymSchema.index({ 'pricing.monthlyMembership': 1 });
 gymSchema.index({ isActive: 1, isVerified: 1 });
 
 const Gym = mongoose.model('Gym', gymSchema);

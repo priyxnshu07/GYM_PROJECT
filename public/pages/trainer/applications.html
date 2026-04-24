@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>My Applications - Gym Discovery</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <h1><a href="../../index.html">GYM DISCOVERY</a></h1>
+                <ul id="nav-links">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container" style="margin-top: 50px;">
+        <h2>My Job Applications</h2>
+        <p style="color:var(--text-muted); margin-bottom:30px;">Track your recruitment status with gym owners.</p>
+
+        <div id="apps-container">
+            <table style="width:100%; border-collapse: collapse; margin-top: 20px;">
+                <thead>
+                    <tr style="text-align:left; border-bottom: 1px solid #333;">
+                        <th style="padding:15px;">Gym Name</th>
+                        <th style="padding:15px;">Position</th>
+                        <th style="padding:15px;">Date Applied</th>
+                        <th style="padding:15px;">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="apps-body">
+                    <!-- Loaded from storage -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function loadApps() {
+            const apps = JSON.parse(localStorage.getItem('my_applications') || '[]');
+            const body = document.getElementById('apps-body');
+            
+            if (apps.length === 0) {
+                body.innerHTML = '<tr><td colspan="4" style="padding:30px; text-align:center; color:var(--text-muted);">No applications found.</td></tr>';
+                return;
+            }
+
+            body.innerHTML = apps.map(app => `
+                <tr style="border-bottom: 1px solid #222;">
+                    <td style="padding:15px;">${app.gym}</td>
+                    <td style="padding:15px;">${app.title}</td>
+                    <td style="padding:15px;">${app.date}</td>
+                    <td style="padding:15px;"><span style="color:var(--primary-neon-green);">${app.status}</span></td>
+                </tr>
+            `).join('');
+        }
+        loadApps();
+    </script>
+</body>
+
+</html>

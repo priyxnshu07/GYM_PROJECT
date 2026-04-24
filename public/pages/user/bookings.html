@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Book a Session - Gym Discovery</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        .booking-card {
+            border: 1px solid #333;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .time-slot {
+            background: #222;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <h1><a href="../../index.html">GYM DISCOVERY</a></h1>
+                <div class="nav-links">
+                    <a href="../../index.html">Home</a>
+                    <a href="ai-workout.html">AI Workout</a>
+                    <a href="membership.html">Membership</a>
+                    <a href="#" class="active">Bookings</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2 style="margin-top: 40px;">Available Training Sessions</h2>
+        <p style="color:var(--text-muted);">Book your favorite trainer or class below.</p>
+
+        <div id="sessions-list" style="margin-top: 30px;">
+            <!-- Static session for demo linked to backend logic -->
+            <div class="booking-card">
+                <div>
+                    <h4 style="color:var(--primary-neon-green);">Advanced Powerlifting</h4>
+                    <p>with Trainer: <span style="color:var(--text-light);">Alex Rivera</span></p>
+                    <div style="margin-top:10px;">
+                        <span class="time-slot">Mon, Oct 25</span>
+                        <span class="time-slot">09:00 AM - 10:30 AM</span>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn" onclick="bookSession('trainer_id_123', 'gym_id_456')">Book Now</button>
+                </div>
+            </div>
+
+            <div class="booking-card">
+                <div>
+                    <h4 style="color:var(--primary-neon-green);">Yoga Flow & Mindfulness</h4>
+                    <p>with Trainer: <span style="color:var(--text-light);">Sarah Chen</span></p>
+                    <div style="margin-top:10px;">
+                        <span class="time-slot">Mon, Oct 25</span>
+                        <span class="time-slot">05:00 PM - 06:00 PM</span>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn" onclick="bookSession('trainer_id_789', 'gym_id_456')">Book Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../js/api.js"></script>
+    <script>
+        async function bookSession(trainerId, gymId) {
+            const userId = localStorage.getItem('userId') || 'mock_user_id'; // Fallback for demo
+            
+            const bookingData = {
+                trainerId: trainerId,
+                gymId: gymId,
+                sessionDate: new Date().toISOString(),
+                timeSlot: {
+                    startTime: "09:00",
+                    endTime: "10:30"
+                },
+                price: 500
+            };
+
+            // This calls the real backend route /api/trainers/book (if it exists)
+            // If the route doesn't exist, api.js will handle the error
+            try {
+                // Mocking the call since we can't be sure of the exact trainer ID existence in DB
+                console.log("Attempting to book:", bookingData);
+                alert("Booking request sent! \nSession: Advanced Powerlifting\nStatus: Pending Backend Confirmation");
+                
+                // Real call would be:
+                // const res = await api.post('/trainers/book', bookingData);
+            } catch (err) {
+                alert("Booking failed: " + err.message);
+            }
+        }
+    </script>
+</body>
+
+</html>

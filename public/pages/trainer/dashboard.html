@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../../css/style.css">
 </head>
 
-<body>
+<body style="background-image: url('../../images/image%20copy%202.png'); background-size: cover; background-position: center;">
     <header>
         <div class="container">
             <nav>
@@ -20,10 +20,41 @@
     </header>
 
     <div class="container">
-        <div
-            style="background: linear-gradient(90deg, #111, #220033); padding: 40px; border-radius: 16px; margin-bottom: 40px; border: 1px solid #441155;">
-            <h2 style="margin-bottom: 5px;">Trainer Portal</h2>
-            <p style="color:var(--text-muted);">Manage your career and clients.</p>
+        <div style="display:flex; justify-content: space-between; align-items: center; background: linear-gradient(90deg, #222, #111); padding: 40px; border-radius: 16px; margin-bottom: 40px; border: 1px solid #333;">
+            <div>
+                <h2 style="margin-bottom: 5px;">Hello, <span id="username" style="color:var(--primary-neon-green);">Trainer</span></h2>
+                <p style="color:var(--text-muted);">Welcome back to your fitness command center.</p>
+            </div>
+            
+            <svg class="svg-deadlift" viewBox="0 0 300 300" style="width: 150px; height: 150px; filter: drop-shadow(0 10px 20px rgba(204, 255, 0, 0.15));" xmlns="http://www.w3.org/2000/svg">
+                <!-- Floor -->
+                <rect x="20" y="270" width="260" height="4" fill="#333" />
+                <rect x="135" y="190" width="14" height="80" fill="#777" />
+                <rect x="151" y="190" width="14" height="80" fill="#777" />
+                <g class="deadlift-lifter">
+                   <circle cx="150" cy="80" r="18" fill="#fff" />
+                   <path d="M110,120 Q150,130 190,120 L165,250 L135,250 Z" fill="#fff" />
+                   <path d="M90,125 L210,125" stroke="#fff" stroke-width="24" stroke-linecap="round" />
+                   <rect x="90" y="125" width="16" height="100" fill="#ccc" rx="8" />
+                   <rect x="194" y="125" width="16" height="100" fill="#ccc" rx="8" />
+                   <rect x="30" y="215" width="240" height="10" fill="#fff" rx="4" />
+                   <rect x="50" y="170" width="20" height="100" fill="#CCFF00" rx="4" />
+                   <rect x="40" y="180" width="10" height="80" fill="#9acd32" rx="2" />
+                   <rect x="230" y="170" width="20" height="100" fill="#CCFF00" rx="4" />
+                   <rect x="250" y="180" width="10" height="80" fill="#9acd32" rx="2" />
+                </g>
+            </svg>
+        </div>
+
+        <!-- NEW: Client Bookings Section -->
+        <div class="form-section" style="margin-bottom: 40px; background:rgba(0,0,0,0.2); border:1px solid #222;">
+            <h3 style="color:var(--primary-neon-green); text-transform:uppercase; font-size:1rem; margin-bottom:20px;">Pending Client Bookings</h3>
+            <div id="bookings-list" style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                <!-- Loaded from Storage -->
+                <div style="grid-column: 1 / -1; text-align:center; padding:20px; color:var(--text-muted);">
+                    No new session requests.
+                </div>
+            </div>
         </div>
 
         <div class="card-grid">
@@ -40,9 +71,9 @@
             </div>
 
             <div class="card">
-                <h3>Applications</h3>
+                <h3>My Applications</h3>
                 <p>Track status of your job applications.</p>
-                <button class="btn btn-secondary" style="margin-top:15px;" disabled>View Applications</button>
+                <a href="applications.html" class="btn btn-secondary" style="margin-top:15px;">Track Applications</a>
             </div>
         </div>
     </div>
@@ -51,8 +82,52 @@
     <script src="../../js/ui.js"></script>
     <script>
         const user = api.getCurrentUser();
-        // Assuming search-jobs.html exists or will exist, otherwise link might 404. 
-        // Logic: Kept the link consistent with previous dashboard.
+        if (user && user.name) {
+            document.getElementById('username').innerText = user.name;
+        }
+
+        function loadBookings() {
+            const bookings = JSON.parse(localStorage.getItem('trainer_bookings') || '[]');
+            const container = document.getElementById('bookings-list');
+            
+            // Filter bookings intended for this specific trainer AND status is 'Pending'
+            const myBookings = bookings.filter(b => b.trainerName === user.name && (!b.status || b.status === 'Pending'));
+            
+            if (myBookings.length > 0) {
+                container.innerHTML = myBookings.map(b => `
+                    <div style="background:#111; padding:20px; border-radius:8px; border-left:4px solid var(--primary-neon-green);">
+                        <h4 style="margin:0;">${b.memberName}</h4>
+                        <p style="font-size:0.85rem; color:var(--text-muted); margin:5px 0;">Goal: ${b.goal}</p>
+                        <div style="margin-top:10px; font-size:0.8rem;">
+                            <span>📅 ${b.date}</span> | <span>⏰ ${b.time}</span>
+                        </div>
+                        <div style="display:flex; gap:10px; margin-top:15px;">
+                            <button class="btn" style="padding:5px 10px; font-size:0.7rem;" onclick="updateBookingStatus('${b.memberName}', '${b.date}', 'Accepted')">Accept</button>
+                            <button class="btn btn-outline" style="padding:5px 10px; font-size:0.7rem;" onclick="updateBookingStatus('${b.memberName}', '${b.date}', 'Declined')">Decline</button>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding:20px; color:var(--text-muted);">No pending session requests for you.</div>';
+            }
+        }
+
+        function updateBookingStatus(memberName, date, newStatus) {
+            let bookings = JSON.parse(localStorage.getItem('trainer_bookings') || '[]');
+            
+            // Update the specific booking status
+            bookings = bookings.map(b => {
+                if (b.memberName === memberName && b.date === date && b.trainerName === user.name) {
+                    return { ...b, status: newStatus };
+                }
+                return b;
+            });
+
+            localStorage.setItem('trainer_bookings', JSON.stringify(bookings));
+            alert(`Booking ${newStatus}!`);
+            loadBookings(); // Refresh the list
+        }
+        loadBookings();
     </script>
 </body>
 

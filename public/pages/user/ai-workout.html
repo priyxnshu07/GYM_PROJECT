@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>AI Workout Generator - Gym Discovery</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        .ai-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: var(--bg-card);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .result-box {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0, 243, 255, 0.05);
+            border: 1px solid var(--primary-neon-green);
+            border-radius: 8px;
+            display: none;
+        }
+
+        .ai-badge {
+            display: inline-block;
+            background: var(--primary-neon-green);
+            color: black;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <h1><a href="../../index.html">GYM DISCOVERY</a></h1>
+                <div class="nav-links">
+                    <a href="../../index.html">Home</a>
+                    <a href="membership.html">Membership</a>
+                    <a href="bookings.html">Bookings</a>
+                    <a href="#" class="active">AI Workout</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="ai-container">
+            <span class="ai-badge">AI POWERED</span>
+            <h2>Personalized Workout Plan Generator</h2>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Tell us your goals and our AI will craft a custom routine for you.</p>
+
+            <form id="ai-form">
+                <div class="form-group">
+                    <label>What is your primary goal?</label>
+                    <select id="goal">
+                        <option value="weight_loss">Weight Loss</option>
+                        <option value="muscle_gain">Muscle Gain</option>
+                        <option value="endurance">Endurance Training</option>
+                        <option value="flexibility">Flexibility & Yoga</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Fitness Level</label>
+                    <select id="level">
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Available Equipment</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <label><input type="checkbox" name="equip" value="full_gym"> Full Gym</label>
+                        <label><input type="checkbox" name="equip" value="dumbbells"> Dumbbells Only</label>
+                        <label><input type="checkbox" name="equip" value="bodyweight"> Bodyweight Only</label>
+                        <label><input type="checkbox" name="equip" value="resistance_bands"> Resistance Bands</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn" style="width:100%;" id="generate-btn">Generate AI Plan</button>
+            </form>
+
+            <div id="ai-result" class="result-box">
+                <h3 id="result-title">Your Custom Plan</h3>
+                <div id="plan-content" style="white-space: pre-line; line-height: 1.6; color: var(--text-light);">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('ai-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('generate-btn');
+            const resultBox = document.getElementById('ai-result');
+            const planContent = document.getElementById('plan-content');
+
+            btn.disabled = true;
+            btn.textContent = 'AI is thinking...';
+            resultBox.style.display = 'none';
+
+            // Simulate AI Processing (In a real app, this calls an LLM API)
+            setTimeout(() => {
+                const goal = document.getElementById('goal').value;
+                const level = document.getElementById('level').value;
+                
+                let plan = "";
+                if (goal === 'muscle_gain') {
+                    plan = "Day 1: Chest & Triceps\n- Bench Press: 4 sets of 8 reps\n- Dumbbell Flyes: 3 sets of 12 reps\n- Tricep Pushdowns: 3 sets of 15 reps\n\nDay 2: Back & Biceps\n- Deadlifts: 3 sets of 5 reps\n- Pull-ups: 3 sets to failure\n- Hammer Curls: 3 sets of 12 reps\n\nDay 3: Legs & Shoulders\n- Squats: 4 sets of 10 reps\n- Overhead Press: 3 sets of 8 reps";
+                } else if (goal === 'weight_loss') {
+                    plan = "High Intensity Interval Training (HIIT)\n- 30 mins: Jump Rope (30s on, 30s off)\n- 4 rounds: Burpees, Mountain Climbers, Plank Jacks\n- Finish with 15 mins of steady-state jogging.";
+                } else {
+                    plan = "General Fitness Routine\n- 10 mins: Dynamic Warm-up\n- 3 sets: Bodyweight Squats, Push-ups, Lunges\n- 20 mins: Brisk walking or cycling\n- 5 mins: Cool down stretch.";
+                }
+
+                planContent.innerText = plan;
+                resultBox.style.display = 'block';
+                btn.disabled = false;
+                btn.textContent = 'Generate AI Plan';
+                
+                // Save to local storage for "permanent" simulation if no backend mod allowed
+                localStorage.setItem('last_ai_plan', plan);
+            }, 1500);
+        });
+    </script>
+</body>
+
+</html>

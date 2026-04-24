@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Find Trainer Jobs - Gym Discovery</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        .job-card {
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #333;
+            margin-bottom: 20px;
+        }
+        .job-tag {
+            background: rgba(204, 255, 0, 0.1);
+            color: var(--primary-neon-green);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <h1><a href="../../index.html">GYM DISCOVERY</a></h1>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container" style="margin-top: 50px;">
+        <h2 style="text-align:center;">Trainer Opportunities in Noida & Delhi</h2>
+        <p style="text-align:center; color:var(--text-muted); margin-bottom:40px;">Find premium gyms looking for your expertise.</p>
+
+        <div id="jobs-list">
+            <!-- Mock Jobs linked to backend logic -->
+            <div class="job-card">
+                <div style="display:flex; justify-content:space-between; align-items:start;">
+                    <div>
+                        <span class="job-tag">Full Time</span>
+                        <h3 style="margin-top:10px;">Senior Personal Trainer</h3>
+                        <p style="color:var(--text-muted);">FitLife Studio, Noida Sector 62</p>
+                    </div>
+                    <div style="text-align:right;">
+                        <p style="font-size:1.2rem; font-weight:bold; color:var(--primary-neon-green);">₹45,000 - ₹60,000</p>
+                        <p style="font-size:0.8rem; color:var(--text-muted);">per month</p>
+                    </div>
+                </div>
+                <p style="margin:20px 0; color:var(--text-muted); font-size:0.9rem;">Looking for a certified trainer with expertise in Strength Training and HIIT. Must have 3+ years experience.</p>
+                <button class="btn" onclick="applyJob('FitLife Studio')">Apply Now</button>
+            </div>
+
+            <div class="job-card">
+                <div style="display:flex; justify-content:space-between; align-items:start;">
+                    <div>
+                        <span class="job-tag">Part Time</span>
+                        <h3 style="margin-top:10px;">Yoga & Pilates Instructor</h3>
+                        <p style="color:var(--text-muted);">Zenith Gym, Delhi CP</p>
+                    </div>
+                    <div style="text-align:right;">
+                        <p style="font-size:1.2rem; font-weight:bold; color:var(--primary-neon-green);">₹1,500 - ₹2,500</p>
+                        <p style="font-size:0.8rem; color:var(--text-muted);">per session</p>
+                    </div>
+                </div>
+                <p style="margin:20px 0; color:var(--text-muted); font-size:0.9rem;">Morning slots available for Yoga specialists. International certification preferred.</p>
+                <button class="btn" onclick="applyJob('Zenith Gym')">Apply Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../js/api.js"></script>
+    <script>
+        function applyJob(gymName) {
+            alert(`Application sent to ${gymName}!\nYou can track this in your Applications dashboard.`);
+            // In a real app, this would POST to /api/applications
+            let apps = JSON.parse(localStorage.getItem('my_applications') || '[]');
+            apps.push({ gym: gymName, title: 'Trainer Role', status: 'Submitted', date: new Date().toLocaleDateString() });
+            localStorage.setItem('my_applications', JSON.stringify(apps));
+        }
+    </script>
+</body>
+
+</html>

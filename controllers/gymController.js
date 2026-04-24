@@ -68,7 +68,7 @@ exports.getGym = async (req, res) => {
 
 exports.searchGyms = async (req, res) => {
     try {
-        const { city, state, facilities, minRating, maxPrice, sortBy, order, page = 1, limit = 10 } = req.query;
+        const { city, state, facilities, minRating, maxPrice, search, sortBy, order, page = 1, limit = 10 } = req.query;
         let query = {};
 
         if (city) query['address.city'] = { $regex: city, $options: 'i' };
@@ -76,20 +76,62 @@ exports.searchGyms = async (req, res) => {
         if (facilities) query.facilities = { $in: facilities.split(',') };
         if (minRating) query.rating = { $gte: parseFloat(minRating) };
         if (maxPrice) query['pricing.monthlyMembership'] = { $lte: parseFloat(maxPrice) };
+        if (search) query.name = { $regex: search, $options: 'i' };
 
         const sortOptions = {};
-        if (sortBy) sortOptions[sortBy] = order === 'desc' ? -1 : 1;
+        if (sortBy) {
+            sortOptions[sortBy] = order === 'desc' ? -1 : 1;
+        } else {
+            sortOptions.rating = -1; // Default sort by rating
+        }
 
         const gyms = await Gym.find(query)
             .sort(sortOptions)
-            .skip((page - 1) * limit)
+            .skip((page - 1) * parseInt(limit))
             .limit(parseInt(limit));
 
         res.status(200).json({
             success: true,
             data: {
                 gyms,
-                pagination: { currentPage: parseInt(page), limit: parseInt(limit) }
+                pagination: { 
+                    currentPage: parseInt(page), 
+                    limit: parseInt(limit),
+                    total: await Gym.countDocuments(query)
+                }
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// New: Analytics Endpoint
+exports.getGymStats = async (req, res) => {
+    try {
+        const stats = await Gym.aggregate([
+            {
+                $group: {
+                    _id: "$address.city",
+                    avgPrice: { $avg: "$pricing.monthlyMembership" },
+                    gymCount: { $sum: 1 },
+                    highestRating: { $max: "$rating" }
+                }
+            },
+            { $sort: { avgPrice: 1 } }
+        ]);
+
+        const highestRated = await Gym.findOne({}).sort({ rating: -1 }).select('name rating address.city');
+        const cheapestGym = await Gym.findOne({ 'pricing.monthlyMembership': { $gt: 0 } }).sort({ 'pricing.monthlyMembership': 1 }).select('name pricing.monthlyMembership address.city');
+
+        res.status(200).json({
+            success: true,
+            data: {
+                cityStats: stats,
+                insights: {
+                    highestRated,
+                    cheapestGym
+                }
             }
         });
     } catch (error) {

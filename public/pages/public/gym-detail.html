@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Gym Details - Gym Discovery</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        .detail-header {
+            padding: 60px 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.4), var(--bg-dark));
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+            margin-top: 40px;
+        }
+        .info-card {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #222;
+        }
+        .stat-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            background: #222;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <h1><a href="../../index.html">GYM DISCOVERY</a></h1>
+            </nav>
+        </div>
+    </header>
+
+    <div id="loader" class="container" style="text-align:center; padding:100px;">
+        <p>Loading gym data...</p>
+    </div>
+
+    <div id="content" style="display:none;">
+        <div class="detail-header">
+            <div class="container">
+                <h1 id="gym-name" style="font-size:3.5rem; text-transform:uppercase;"></h1>
+                <p id="gym-city" style="color:var(--primary-neon-green); font-size:1.2rem; margin-top:10px;"></p>
+            </div>
+        </div>
+
+        <main class="container">
+            <div class="info-grid">
+                <div class="info-section">
+                    <h3>About this Gym</h3>
+                    <p id="gym-desc" style="margin-top:20px; color:var(--text-muted); line-height:1.8;"></p>
+                    
+                    <h3 style="margin-top:40px;">Facilities</h3>
+                    <div id="facilities" style="display:flex; flex-wrap:wrap; gap:10px; margin-top:15px;"></div>
+                </div>
+
+                <div class="sidebar">
+                    <div class="info-card">
+                        <p style="color:var(--text-muted); font-size:0.8rem; text-transform:uppercase;">Monthly Membership</p>
+                        <p id="gym-price" style="font-size:2.5rem; font-weight:bold; margin-bottom:20px;"></p>
+                        
+                        <div id="rating-section" style="margin-bottom:30px;">
+                            <span class="stat-badge">⭐ <span id="gym-rating"></span> Rating</span>
+                        </div>
+
+                        <div id="action-btn-container"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/api.js"></script>
+    <script>
+        async function loadGym() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const gymId = urlParams.get('id');
+            
+            if (!gymId) {
+                alert('No gym selected');
+                window.location.href = '../../index.html';
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/gyms/${gymId}`);
+                const result = await res.json();
+                const gym = result.data;
+
+                if (gym) {
+                    document.getElementById('gym-name').innerText = gym.name || 'Unknown Gym';
+                    document.getElementById('gym-city').innerText = gym.address ? `${gym.address.city || ''}, ${gym.address.state || ''}` : 'Location N/A';
+                    document.getElementById('gym-desc').innerText = gym.description || 'No description available for this gym.';
+                    
+                    const price = (gym.pricing && gym.pricing.monthlyMembership) ? gym.pricing.monthlyMembership : 'N/A';
+                    document.getElementById('gym-price').innerText = price !== 'N/A' ? `₹${price}` : 'Price N/A';
+                    
+                    document.getElementById('gym-rating').innerText = gym.rating || 'N/A';
+
+                    // Facilities
+                    const facDiv = document.getElementById('facilities');
+                    if (gym.facilities && gym.facilities.length > 0) {
+                        gym.facilities.forEach(f => {
+                            const span = document.createElement('span');
+                            span.className = 'stat-badge';
+                            span.innerText = f.replace(/_/g, ' ');
+                            facDiv.appendChild(span);
+                        });
+                    } else {
+                        facDiv.innerHTML = '<p style="color:var(--text-muted);">No facilities listed.</p>';
+                    }
+
+                    // Smart Link System
+                    const btnContainer = document.getElementById('action-btn-container');
+                    if (gym.website && gym.website.trim().length > 0) {
+                        btnContainer.innerHTML = `<a href="${gym.website}" target="_blank" class="btn" style="width:100%; text-align:center; display:block;">Visit Website</a>`;
+                    } else {
+                        const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(gym.name + ' ' + (gym.address ? gym.address.city : ''))}`;
+                        btnContainer.innerHTML = `<a href="${searchUrl}" target="_blank" class="btn btn-outline" style="width:100%; text-align:center; display:block;">Find on Google</a>`;
+                    }
+
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('content').style.display = 'block';
+                } else {
+                    document.getElementById('loader').innerHTML = '<p style="color:red;">Gym not found.</p>';
+                }
+            } catch (err) {
+                console.error(err);
+                document.getElementById('loader').innerHTML = '<p style="color:red;">Failed to load gym details. Error: ' + err.message + '</p>';
+            }
+        }
+        loadGym();
+    </script>
+</body>
+
+</html>

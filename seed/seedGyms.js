@@ -129,7 +129,7 @@ const seedGyms = async () => {
             const gymData = {
                 ownerId: owner._id,
                 name: name.trim(),
-                description: `Imported from source: ${row['Data Source (Google Maps / Justdial / Official Website)'] || 'Excel Data'}`,
+                description: 'A premium fitness facility offering various amenities to help you achieve your fitness goals.',
                 address: {
                     street: fullAddress || 'Address not provided',
                     city: city.trim(),

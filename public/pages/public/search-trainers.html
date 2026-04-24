@@ -29,8 +29,8 @@
                     <input type="text" id="specialization" placeholder="e.g. Yoga, Hypertrophy">
                 </div>
                 <div class="form-group">
-                    <label>Max Budget ($/hr)</label>
-                    <input type="number" id="maxRate" placeholder="e.g. 100">
+                    <label>Max Budget (₹/hr)</label>
+                    <input type="number" id="maxRate" placeholder="e.g. 2000">
                 </div>
                 <div class="form-group">
                     <label>Experience Level</label>
@@ -108,7 +108,7 @@
                                 </div>
                             </div>
                             <div style="text-align:right;">
-                                <span style="display:block; font-size:1.2rem; font-weight:bold; color:#fff;">$${t.hourlyRate}</span>
+                                <span style="display:block; font-size:1.2rem; font-weight:bold; color:#fff;">₹${t.hourlyRate}</span>
                                 <span style="font-size:0.75rem; color:var(--text-muted);">per hour</span>
                             </div>
                         </div>
@@ -127,11 +127,35 @@
                              <div style="display:flex; align-items:center; gap:5px;">
                                  <span style="color:#fff; font-weight:600; font-size:0.9rem;">★ ${t.rating ? t.rating : 'New'}</span>
                              </div>
-                             <button class="btn" style="padding:8px 16px; font-size:0.85rem;" onclick="alert('Booking Coming Soon')">Book Now</button>
+                             <button class="btn" style="padding:8px 16px; font-size:0.85rem;" onclick="bookTrainer('${t.name}', '${t.trainerId}')">Book Now</button>
                         </div>
                     </div>
                 `;
             }).join('');
+        }
+
+        async function bookTrainer(name, id) {
+            const user = api.getCurrentUser();
+            if (!user || user.role !== 'user') {
+                alert('Please log in as a Gym Member to book a trainer.');
+                return;
+            }
+
+            const booking = {
+                memberName: user.name,
+                trainerId: id,
+                trainerName: name, // We will match on name for this demo
+                date: new Date().toLocaleDateString(),
+                time: "10:00 AM",
+                goal: "Muscle Gain"
+            };
+
+            // Save to shared storage
+            let bookings = JSON.parse(localStorage.getItem('trainer_bookings') || '[]');
+            bookings.push(booking);
+            localStorage.setItem('trainer_bookings', JSON.stringify(bookings));
+
+            alert(`Request sent to ${name}! They will see it on their dashboard.`);
         }
 
         function formatText(str) {

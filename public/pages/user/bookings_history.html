@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>My Bookings - Gym Discovery</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <h1><a href="../../index.html">GYM DISCOVERY</a></h1>
+                <ul id="nav-links">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container" style="margin-top: 50px;">
+        <h2>My Session Bookings</h2>
+        <p style="color:var(--text-muted); margin-bottom:30px;">Track the status of your requests with trainers.</p>
+
+        <div id="bookings-container">
+            <table style="width:100%; border-collapse: collapse; margin-top: 20px;">
+                <thead>
+                    <tr style="text-align:left; border-bottom: 1px solid #333;">
+                        <th style="padding:15px;">Trainer Name</th>
+                        <th style="padding:15px;">Date</th>
+                        <th style="padding:15px;">Time</th>
+                        <th style="padding:15px;">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="bookings-body">
+                    <!-- Loaded from storage -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="../../js/api.js"></script>
+    <script>
+        function loadMyBookings() {
+            const user = api.getCurrentUser();
+            const bookings = JSON.parse(localStorage.getItem('trainer_bookings') || '[]');
+            const body = document.getElementById('bookings-body');
+            
+            // Filter bookings made by this member
+            const myBookings = bookings.filter(b => b.memberName === user.name);
+
+            if (myBookings.length === 0) {
+                body.innerHTML = '<tr><td colspan="4" style="padding:30px; text-align:center; color:var(--text-muted);">No bookings found.</td></tr>';
+                return;
+            }
+
+            body.innerHTML = myBookings.map(b => `
+                <tr style="border-bottom: 1px solid #222;">
+                    <td style="padding:15px;">${b.trainerName}</td>
+                    <td style="padding:15px;">${b.date}</td>
+                    <td style="padding:15px;">${b.time}</td>
+                    <td style="padding:15px;">
+                        <span style="color: ${b.status === 'Accepted' ? 'var(--primary-neon-green)' : (b.status === 'Declined' ? '#ff4d4d' : 'var(--text-muted)')}; font-weight:bold;">
+                            ${b.status || 'Pending'}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        loadMyBookings();
+    </script>
+</body>
+
+</html>

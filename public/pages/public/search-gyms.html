@@ -18,6 +18,31 @@
     </header>
 
     <div class="container">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <svg class="svg-pullup" viewBox="0 0 300 300" style="width: 150px; height: 150px; margin: 0 auto; display: block; filter: drop-shadow(0 10px 20px rgba(204, 255, 0, 0.15));" xmlns="http://www.w3.org/2000/svg">
+                <!-- Pull-up Bar -->
+                <rect x="40" y="50" width="220" height="10" fill="#fff" rx="5" />
+                
+                <!-- Torso sliding up down -->
+                <g class="pullup-torso">
+                    <!-- Head -->
+                    <circle cx="150" cy="110" r="22" fill="#fff" />
+                    <!-- Torso V-shape (shoulders at Y=140) -->
+                    <path d="M100,140 Q150,150 200,140 L170,250 L130,250 Z" fill="#fff" />
+                </g>
+                <!-- Arms scaling Y -->
+                <g class="pullup-arms">
+                    <!-- left arm (from Y=60 to Y=140) -->
+                    <rect x="100" y="60" width="16" height="80" fill="#ccc" rx="8" />
+                    <!-- right arm -->
+                    <rect x="184" y="60" width="16" height="80" fill="#ccc" rx="8" />
+                    
+                    <!-- Hands over the bar -->
+                    <rect x="95" y="45" width="26" height="20" fill="var(--primary-neon-green)" rx="8" />
+                    <rect x="179" y="45" width="26" height="20" fill="var(--primary-neon-green)" rx="8" />
+                </g>
+            </svg>
+        </div>
         <h2 style="text-align:center;">Discover Premium Spaces</h2>
         <p style="text-align:center; color:var(--text-muted); margin-bottom:40px;">Find the perfect environment for your
             workout.</p>

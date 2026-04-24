@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../../css/style.css">
 </head>
 
-<body>
+<body style="background-image: url('../../images/image%20copy%202.png'); background-size: cover; background-position: center;">
     <header>
         <div class="container">
             <nav>
@@ -20,11 +20,41 @@
     </header>
 
     <div class="container">
-        <div
-            style="background: linear-gradient(90deg, #222, #111); padding: 40px; border-radius: 16px; margin-bottom: 40px; border: 1px solid #333;">
-            <h2 style="margin-bottom: 5px;">Hello, <span id="username" style="color:var(--primary-neon);">User</span>
-            </h2>
-            <p style="color:var(--text-muted);">Welcome back to your fitness command center.</p>
+        <div style="display:flex; justify-content: space-between; align-items: center; background: linear-gradient(90deg, #222, #111); padding: 40px; border-radius: 16px; margin-bottom: 40px; border: 1px solid #333;">
+            <div>
+                <h2 style="margin-bottom: 5px;">Hello, <span id="username" style="color:var(--primary-neon-green);">User</span></h2>
+                <p style="color:var(--text-muted);">Welcome back to your fitness command center.</p>
+            </div>
+            
+            <svg class="svg-deadlift" viewBox="0 0 300 300" style="width: 150px; height: 150px; filter: drop-shadow(0 10px 20px rgba(204, 255, 0, 0.15));" xmlns="http://www.w3.org/2000/svg">
+                <!-- Floor -->
+                <rect x="20" y="270" width="260" height="4" fill="#333" />
+                <!-- Static Legs under Torso -->
+                <rect x="135" y="190" width="14" height="80" fill="#777" />
+                <rect x="151" y="190" width="14" height="80" fill="#777" />
+                
+                <!-- Animated Lifter (Torso + Arms + Barbell) -->
+                <g class="deadlift-lifter">
+                   <!-- Head -->
+                   <circle cx="150" cy="80" r="18" fill="#fff" />
+                   <!-- Long Torso to cover legs when moving up -->
+                   <path d="M110,120 Q150,130 190,120 L165,250 L135,250 Z" fill="#fff" />
+                   <!-- Shoulders -->
+                   <path d="M90,125 L210,125" stroke="#fff" stroke-width="24" stroke-linecap="round" />
+                   <!-- Arms -->
+                   <rect x="90" y="125" width="16" height="100" fill="#ccc" rx="8" />
+                   <rect x="194" y="125" width="16" height="100" fill="#ccc" rx="8" />
+                   
+                   <!-- Barbell Bar -->
+                   <rect x="30" y="215" width="240" height="10" fill="#fff" rx="4" />
+                   <!-- Left Plates -->
+                   <rect x="50" y="170" width="20" height="100" fill="#CCFF00" rx="4" />
+                   <rect x="40" y="180" width="10" height="80" fill="#9acd32" rx="2" />
+                   <!-- Right Plates -->
+                   <rect x="230" y="170" width="20" height="100" fill="#CCFF00" rx="4" />
+                   <rect x="250" y="180" width="10" height="80" fill="#9acd32" rx="2" />
+                </g>
+            </svg>
         </div>
 
         <div class="card-grid">
@@ -44,11 +74,11 @@
                 </div>
             </div>
 
-            <div class="card" style="opacity: 0.7;">
+            <div class="card">
                 <h3>My Bookings</h3>
-                <p>Manage your upcoming sessions.</p>
+                <p>Manage your upcoming sessions and trainer status.</p>
                 <div style="margin-top:20px;">
-                    <button class="btn btn-secondary" disabled>Coming Soon</button>
+                    <a href="bookings_history.html" class="btn btn-secondary">View Bookings</a>
                 </div>
             </div>
         </div>

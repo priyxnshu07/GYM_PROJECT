@@ -13,7 +13,7 @@ def generate_random_email():
     return f"testuser_{random_str}@example.com"
 
 # --- Configuration ---
-BASE_URL = "http://localhost:3000"
+BASE_URL = "http://127.0.0.1:3005"
 WAIT_TIME = 10  # Seconds for explicit waits
 
 print("--- Starting Gym Discovery Automation Test ---")

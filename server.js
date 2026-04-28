@@ -29,9 +29,17 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/public/index.html');
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3005;
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-    console.log(`Open http://localhost:${PORT} in your browser`);
+// Global Error Handlers to prevent crash
+process.on('unhandledRejection', (err) => {
+    console.log(`Error: ${err.message}`);
+});
+
+process.on('uncaughtException', (err) => {
+    console.log(`Error: ${err.message}`);
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on http://0.0.0.0:${PORT}`);
 });

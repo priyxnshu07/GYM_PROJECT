@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="GymProjectSuite">
+    <test name="TitleVerification">
+        <classes>
+            <class name="src.GymTest"/>
+        </classes>
+    </test>
+</suite>
